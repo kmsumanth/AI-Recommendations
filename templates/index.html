@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User Interaction Generator</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);
+            color: #333;
+            padding: 20px 0;
+        }
+
+        .container {
+            text-align: center;
+            background: white;
+            padding: 40px;
+            border-radius: 20px;
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.2);
+            max-width: 600px;
+            width: 90%;
+            animation: fadeIn 0.8s ease-in-out;
+        }
+
+        h1 {
+            margin: 0 0 25px 0;
+            color: #4a00e0;
+            font-size: 2.2rem;
+            font-weight: 700;
+            text-shadow: 1px 1px 1px rgba(0, 0, 0, 0.1);
+        }
+
+        button {
+            background: linear-gradient(45deg, #ff7b00, #ff006a);
+            color: white;
+            border: none;
+            padding: 12px 30px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            border-radius: 50px;
+            margin-top: 20px;
+            transition: transform 0.3s, box-shadow 0.3s;
+            box-shadow: 0 5px 15px rgba(255, 123, 0, 0.4);
+        }
+
+        button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(255, 123, 0, 0.6);
+        }
+
+        button:active {
+            transform: translateY(1px);
+        }
+
+        #statusMessage {
+            margin-top: 20px;
+            padding: 15px;
+            border-radius: 8px;
+            font-weight: 500;
+            min-height: 20px;
+            color: #4a5568;
+        }
+
+        .success {
+            background-color: #c6f6d5;
+            color: #2f855a;
+        }
+
+        .loading {
+            background-color: #e9d8fd;
+            color: #6b46c1;
+        }
+
+        .error {
+            background-color: #fed7d7;
+            color: #c53030;
+        }
+
+        .icon {
+            font-size: 3rem;
+            margin-bottom: 15px;
+            color: #ff7b00;
+        }
+
+        #sampleData {
+            margin-top: 30px;
+            text-align: left;
+            background-color: #f8f9fa;
+            padding: 15px;
+            border-radius: 8px;
+            border-left: 4px solid #4a00e0;
+            display: none;
+        }
+
+        #sampleData pre {
+            margin: 0;
+            white-space: pre-wrap;
+            font-family: 'Courier New', Courier, monospace;
+            font-size: 0.9rem;
+            overflow-x: auto;
+        }
+
+        .data-title {
+            font-weight: 600;
+            margin-bottom: 10px;
+            color: #4a00e0;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+
+        .pulse {
+            animation: pulse 2s infinite;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="icon">🚀</div>
+        <h1>User Interaction Generator</h1>
+        <p>Click the button below to generate a batch of 1000 simulated user events for your application.</p>
+        <form action="/user_interactions" method="post">
+            <button type="submit" id="generateBtn">Generate 1000 User Events</button>
+        </form>
+        <div id="statusMessage"></div>
+        <div id="sampleData">
+            <div class="data-title">Sample Generated User Event:</div>
+            <pre id="jsonData"></pre>
+        </div>
+    </div>
+
+    <script>
+        document.querySelector('form').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const statusMessage = document.getElementById('statusMessage');
+            const button = document.getElementById('generateBtn');
+            const sampleData = document.getElementById('sampleData');
+            const jsonData = document.getElementById('jsonData');
+            
+            // Show loading state
+            statusMessage.textContent = "Generating user events... Please wait.";
+            statusMessage.className = "loading";
+            button.disabled = true;
+            sampleData.style.display = "none";
+            
+            // Simulate API call and data generation
+            setTimeout(() => {
+                // Generate sample user interaction data
+                const sampleUserEvent = generateSampleUserEvent();
+                
+                // Update status
+                statusMessage.textContent = "Successfully generated 1000 user events!";
+                statusMessage.className = "success";
+                button.disabled = false;
+                
+                // Display sample data
+                jsonData.textContent = JSON.stringify(sampleUserEvent, null, 2);
+                sampleData.style.display = "block";
+                sampleData.scrollIntoView({ behavior: 'smooth' });
+            }, 2000);
+        });
+        
+        // Function to generate a sample user event
+        function generateSampleUserEvent() {
+            const userEvents = [
+                "page_view", "button_click", "form_submit", "scroll", "hover", 
+                "login", "logout", "add_to_cart", "purchase", "video_play"
+            ];
+            
+            const browsers = [
+                "Chrome", "Firefox", "Safari", "Edge", "Opera"
+            ];
+            
+            const devices = [
+                "Desktop", "Mobile", "Tablet"
+            ];
+            
+            const countries = [
+                "United States", "Canada", "United Kingdom", "Germany", 
+                "France", "Japan", "Australia", "Brazil", "India"
+            ];
+            
+            // Generate random timestamp within the last 24 hours
+            const now = new Date();
+            const timestamp = new Date(now - Math.floor(Math.random() * 24 * 60 * 60 * 1000));
+            
+            return {
+                event_id: generateRandomId(),
+                user_id: generateRandomId(8),
+                timestamp: timestamp.toISOString(),
+                event_type: userEvents[Math.floor(Math.random() * userEvents.length)],
+                page_url: generateRandomUrl(),
+                session_duration: Math.floor(Math.random() * 3600),
+                browser: browsers[Math.floor(Math.random() * browsers.length)],
+                device_type: devices[Math.floor(Math.random() * devices.length)],
+                country: countries[Math.floor(Math.random() * countries.length)],
+                referrer: Math.random() > 0.5 ? generateRandomReferrer() : null,
+                user_agent: generateUserAgent()
+            };
+        }
+        
+        // Helper functions for data generation
+        function generateRandomId(length = 12) {
+            const chars = "abcdefghijklmnopqrstuvwxyz0123456789";
+            let result = "";
+            for (let i = 0; i < length; i++) {
+                result += chars.charAt(Math.floor(Math.random() * chars.length));
+            }
+            return result;
+        }
+        
+        function generateRandomUrl() {
+            const paths = [
+                "/home", "/products", "/services", "/about", "/contact", 
+                "/blog", "/login", "/signup", "/cart", "/checkout"
+            ];
+            return "https://example.com" + paths[Math.floor(Math.random() * paths.length)];
+        }
+        
+        function generateRandomReferrer() {
+            const referrers = [
+                "https://google.com", "https://facebook.com", "https://twitter.com",
+                "https://instagram.com", "https://linkedin.com", "direct"
+            ];
+            return referrers[Math.floor(Math.random() * referrers.length)];
+        }
+        
+        function generateUserAgent() {
+            return "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/96.0.4664.110 Safari/537.36";
+        }
+    </script>
+</body>
+</html>
